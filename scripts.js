@@ -5,59 +5,70 @@ const progress = player.querySelector('.progress__filled')
 const progressBar = player.querySelector('.progress')
 const toggle = player.querySelector('.toggle')
 const skipButtons = player.querySelectorAll('[data-skip]')
+const fullscreenButton = player.querySelector("[name='fullscreen'")
 const ranges = player.querySelectorAll('.player__slider')
 
 let isUpdating = false
 
-// Build our functions
+// Play/pause on click
 function togglePlay() {
-	if(video.paused) {
-		video.play()
-	} else {
-		video.pause()
-	}
+	if(video.paused) { video.play() } 
+		else { video.pause() }
 }
 
+// Toggle play/pause button with any event that toggles the video state
 function updateButton() {
 	const icon = this.paused ? '►' : '❚ ❚'
 	toggle.textContent = icon
 }
 
+// Time-skipp buttons
 function skip() {
 	console.log(this.dataset.skip)
 	video.currentTime += parseFloat(this.dataset.skip)
 }
 
+// Volume and Speed sliders
 function handleRangeUpdate() {
 	if(!isUpdating) return // flag to update range only when mouse is down.
-
 	video[this.name] = this.value
 }
 
+// Auto-fill progress
 function handleProgress() {
 	const percent = (video.currentTime / video.duration) * 100
 	progress.style.flexBasis = `${percent}%`
 }
 
+// Scrubbing
 function scrub(e) {
 	if(!isUpdating) return // flag to scrub only when mouse is down.
-
 	const scrubTime = (e.offsetX / progressBar.offsetWidth) * video.duration
-
 	video.currentTime = scrubTime
 }
 
+function fullscreen() {
+	player.classList.toggle('fullscreen')
+}
+
+
 // Hook up event listeners
+// Play/pause video on click
 video.addEventListener('click', togglePlay)
+toggle.addEventListener('click', togglePlay)
+
+// Toggle play/pause button icon
 video.addEventListener('play', updateButton)
 video.addEventListener('pause', updateButton)
 
-// listener for triggering auto progress updating
+// Auto-update progress fill
 video.addEventListener('timeupdate', handleProgress)
 
-toggle.addEventListener('click', togglePlay)
-
+// Time-skip buttons
 skipButtons.forEach(button => button.addEventListener('click', skip))
+
+// Fullscreen button
+fullscreenButton.addEventListener('click', fullscreen)
 
 // Volume and Speed sliders
 ranges.forEach(range => range.addEventListener('change', handleRangeUpdate))
