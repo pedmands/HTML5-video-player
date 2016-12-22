@@ -89,7 +89,6 @@ body {
   width:50%;
   background:#189FFF;
   flex:0;
-  flex-basis:50%;
 }
 
 /* unholy css to style input type="range" */
